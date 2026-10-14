@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b1f38" />
+    <title>Карта ВОЛС — цифровой реестр</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#map"><span class="brand-mark">⌁</span><span>Карта<br /><strong>ВОЛС</strong></span></a>
+        <nav class="nav" aria-label="Основная навигация">
+          <a class="active" href="#map">Карта</a><a href="#registry">Реестр</a><a href="#about">О проекте</a>
+        </nav>
+        <div class="top-actions"><button class="lang" type="button">RU <span>⌄</span></button><button class="login" type="button" data-notice="Вход сотрудников будет подключён после настройки Supabase Auth.">Вход для сотрудников <span>→</span></button></div>
+      </header>
+
+      <main>
+        <section class="hero" id="map">
+          <div class="hero-copy"><p class="eyebrow"><i></i> Цифровой реестр инфраструктуры</p><h1>Карта волоконно-<br />оптических сетей</h1><p class="lead">Открытая схема городских линий связи и единая точка для сообщений о повреждениях.</p></div>
+          <div class="hero-status"><span class="pulse"></span><span><b>Публичный режим</b><small>Показаны только разрешённые данные</small></span></div>
+        </section>
+
+        <section class="map-section" aria-label="Публичная карта ВОЛС">
+          <aside class="sidebar">
+            <div class="sidebar-title"><span class="section-icon">⌘</span><div><h2>Карта инфраструктуры</h2><p>Городской демонстрационный контур</p></div></div>
+            <label class="search"><span>⌕</span><input id="search" type="search" placeholder="Поиск по номеру или оператору" /></label>
+            <div class="filter-head"><span>Фильтры</span><button id="clearFilters" type="button">Сбросить</button></div>
+            <fieldset class="filter-group"><legend>Оператор</legend><label><input class="operator-filter" type="checkbox" value="all" checked /> <span class="swatch all"></span>Все операторы <b id="lineCount">4</b></label><label><input class="operator-filter" type="checkbox" value="QazaqNet" checked /> <span class="swatch blue"></span>QazaqNet</label><label><input class="operator-filter" type="checkbox" value="CityLink" checked /> <span class="swatch orange"></span>CityLink</label><label><input class="operator-filter" type="checkbox" value="Optima" checked /> <span class="swatch mint"></span>Optima Telecom</label></fieldset>
+            <fieldset class="filter-group"><legend>Состояние</legend><div class="chips"><button class="chip active" data-status="all" type="button">Все</button><button class="chip" data-status="active" type="button">Действующие</button><button class="chip" data-status="reserve" type="button">Резерв</button></div></fieldset>
+            <div class="privacy-card"><span>⌁</span><p><b>Защита данных</b><br />Точные трассы и технические сведения доступны только уполномоченным сотрудникам.</p><a href="#about">Подробнее →</a></div>
+          </aside>
+          <div class="map-wrap"><div id="leafletMap" role="application" aria-label="Интерактивная карта"></div><div class="map-caption"><span class="dot"></span> Обновлено сегодня, 09:42</div><div class="map-legend"><span><i class="blue-bg"></i>QazaqNet</span><span><i class="orange-bg"></i>CityLink</span><span><i class="mint-bg"></i>Optima</span></div></div>
+          <aside class="details-panel" id="detailsPanel"><button class="close-details" type="button" aria-label="Закрыть карточку">×</button><span class="tag">РАЗРЕШЁННЫЕ СВЕДЕНИЯ</span><div class="cable-title"><span class="cable-icon">⌁</span><div><h2 id="cableName">Кабель QN-204</h2><p id="cableOrg">QazaqNet</p></div></div><dl><div><dt>Статус</dt><dd><span class="status active-dot" id="cableStatus">Действующий</span></dd></div><div><dt>Тип линии</dt><dd id="cableType">Городская магистраль</dd></div><div><dt>Публичный ID</dt><dd id="cableId">PUB-QN-204</dd></div></dl><div class="detail-note">Точная геометрия трассы, внутренние номера и технические контакты не публикуются.</div><button class="outline-button" type="button" data-notice="QR-код доступен после публикации постоянного адреса приложения.">▣ Открыть QR-код</button></aside>
+        </section>
+
+        <section class="quick-grid" id="registry"><article><span class="quick-icon blue-icon">⌘</span><div><h3>Найти линию</h3><p>Поиск по публичному номеру, оператору или району.</p></div><button type="button" data-focus-search>Начать поиск <span>→</span></button></article><article><span class="quick-icon amber-icon">!</span><div><h3>Сообщить о повреждении</h3><p>Отправьте обращение — диспетчер проверит его.</p></div><button class="alert-button" type="button" id="openReport">Создать сообщение <span>→</span></button></article><article><span class="quick-icon green-icon">i</span><div><h3>Правила доступа</h3><p>Какие данные доступны на публичной карте.</p></div><a href="#about">Узнать больше <span>→</span></a></article></section>
+
+        <section class="about" id="about"><div><p class="eyebrow"><i></i> Безопасность — прежде всего</p><h2>Публичная карта<br />не показывает инженерную схему.</h2></div><div class="about-text"><p>Этот прототип использует вымышленные данные. В рабочей версии публичный API будет возвращать только специально подготовленную геометрию и разрешённые карточки объектов.</p><a href="#map">Вернуться к карте →</a></div></section>
+      </main>
+      <footer><span>© 2026 Карта ВОЛС</span><span>Демонстрационный прототип · Без реальных данных инфраструктуры</span><a href="#about">Правила доступа</a></footer>
+    </div>
+
+    <dialog id="reportDialog"><form method="dialog" id="reportForm"><button class="dialog-close" value="cancel" aria-label="Закрыть">×</button><p class="eyebrow"><i></i> Обращение диспетчеру</p><h2>Сообщить о повреждении</h2><p class="dialog-lead">Не указывайте в обращении технические параметры линий. Диспетчер свяжется с вами при необходимости.</p><label>Описание происшествия<textarea required minlength="10" placeholder="Что произошло и где это заметили?"></textarea></label><label>Контакт для обратной связи <input type="text" placeholder="Телефон или email (необязательно)" /></label><label class="consent"><input type="checkbox" required /> <span>Я согласен на обработку предоставленных данных для рассмотрения обращения.</span></label><button class="submit-report" value="submit">Отправить сообщение →</button></form></dialog>
+    <div class="toast" id="toast" role="status"></div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
